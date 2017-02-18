@@ -10,17 +10,19 @@ const options = {
     mdk: mdk_express.mdk,
     name: 'lead-service'
 }
-
 winston.add(mdk_winston.MDKTransport, options);
 
 exports.create = (req, res) => {
     const lead = new Lead(req.body);
+    winston.info('Received request to create new lead: ' + lead);
     lead.id = Math.floor((Math.random() * 4732981560546796792) + 1);
     lead.save()
         .then(newLead => {
+            winston.info('created lead: ' + JSON.stringify(newLead));
             return res.status(201).json(newLead);
         })
         .catch(err => {
+            winston.error(JSON.stringify(err));
             return res.status(500).json({
                 message: 'error creating Lead',
                 error: err
