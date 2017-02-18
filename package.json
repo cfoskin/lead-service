@@ -1,0 +1,42 @@
+{
+  "name": "lead-service",
+  "version": "1.0.0",
+  "description": "service extracted from Aerodoc node",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "mocha",
+    "populateDb": "node ./scripts/loadSalesAgents.js",
+    "coverage": "./node_modules/istanbul/lib/cli.js cover -x **/app/controllers/** -x **/app/utility/** node_modules/mocha/bin/_mocha test/*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cfoskin/lead-service.git"
+  },
+  "author": "Colum Foskin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cfoskin/lead-service/issues"
+  },
+  "homepage": "https://github.com/cfoskin/lead-service#readme",
+  "dependencies": {
+    "body-parser": "1.15.2",
+    "chai": "3.5.0",
+    "cookie-parser": "1.4.3",
+    "datawire_mdk_express": "^2.0.37",
+    "datawire_mdk_winston": "^2.0.37",
+    "express": "4.14.0",
+    "mongodb": "2.2.19",
+    "mongoose": "4.6.3",
+    "mongoose-double": "0.0.1",
+    "morgan": "1.7.0",
+    "request-id": "^0.11.1",
+    "unifiedpush-node-sender": "^0.14.1"
+  },
+  "devDependencies": {
+    "istanbul": "0.4.5",
+    "mocha": "3.1.2",
+    "supertest": "2.0.1"
+  }
+}

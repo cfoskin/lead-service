@@ -1,0 +1,11 @@
+.DS_Store
+db
+node_modules
+.sonar/*
+npm-debug.log
+.dockerignore
+coverage/*
+.idea/*
+app-template.json
+.jscsrc
+jcsrc
