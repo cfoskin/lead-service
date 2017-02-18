@@ -57,13 +57,16 @@ exports.getAll = (req, res) => {
 };
 
 exports.delete = (req, res) => {
+    winston.info('Received request to delete lead: ' + req.params.id);
     Lead.remove({ id: req.params.id })
         .then(lead => {
+            winston.info('deleted lead: ' + JSON.stringify(lead));
             return res.status(204).json(lead);
         })
         .catch(err => {
+            winston.error(JSON.stringify(err));
             return res.status(404).json({
-                message: 'id not found',
+                message: 'lead not found',
                 error: err
             });
         });
@@ -79,7 +82,7 @@ exports.sendLeads = (req, res) => {
         })
         .catch(err => {
             return res.status(404).json({
-                message: 'id not found',
+                message: 'lead not found',
                 error: err
             });
         })
