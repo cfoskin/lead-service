@@ -1,0 +1,19 @@
+{
+    "aerodoc": "http://localhost:3000",
+    "leads": [{
+        "name": "lead1",
+        "location": "Waterford",
+        "phoneNumber": "1111",
+        "salesAgent": "agent1"
+    }, {
+        "name": "lead2",
+        "location": "Dublin",
+        "phoneNumber": "2222",
+        "salesAgent": "agent2"
+    }, {
+        "name": "lead3",
+        "location": "Kilkenny",
+        "phoneNumber": "3333",
+        "salesAgent": "agent3"
+    }]
+}
