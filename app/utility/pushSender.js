@@ -2,6 +2,16 @@
 
 const PushConfig = require('../model/PushConfig');
 const agSender = require('unifiedpush-node-sender'); 
+const winston = require('winston');
+const mdk_express = require('datawire_mdk_express');
+const mdk_winston = require('datawire_mdk_winston');
+// Route Winston logging to the MDK:
+const options = {
+    mdk: mdk_express.mdk,
+    name: 'lead-service/pushSender'
+}
+winston.add(mdk_winston.MDKTransport, options);
+
 
 const newLeadMessage = {
     alert: 'A new lead has been created',
@@ -32,6 +42,7 @@ var settings = {
 };
 
 var sendPush = (pushMessage, pushOptions, settings) => {
+    winston.info('Received request to send push message:' + JSON.stringify(pushMessage) );
     agSender(settings)
         .then((client) => {
             return client.sender.send(pushMessage, pushOptions);
@@ -40,6 +51,7 @@ var sendPush = (pushMessage, pushOptions, settings) => {
             res.status(202);
         })
         .catch(err => {
+            winston.error(JSON.stringify(err));
             return res.status(500).json({
                 message: 'failed to send push',
                 error: err
@@ -48,6 +60,7 @@ var sendPush = (pushMessage, pushOptions, settings) => {
 };
 
 exports.sendLeads = (aliases, lead) => {
+    winston.info('Received request to send lead to aliases' + JSON.stringify(aliases));
     PushConfig.findOne({ active: true })
         .then(activePushConfig => {
             if (activePushConfig != null) {
@@ -63,6 +76,7 @@ exports.sendLeads = (aliases, lead) => {
             }
         })
         .catch(err => {
+            winston.error(JSON.stringify(err));
             return res.status(404).json({
                 message: 'error finding active push config',
                 error: err
@@ -89,6 +103,7 @@ var acceptedLeadOptions = {
 };
 
 exports.sendBroadcast = (lead) => {
+    winston.info('Received request to send push broadcase for lead:' + JSON.stringify(lead));
     PushConfig.findOne({ active: true })
         .then(activePushConfig => {
             if (activePushConfig != null) {
@@ -103,6 +118,7 @@ exports.sendBroadcast = (lead) => {
             }
         })
         .catch(err => {
+            winston.error(JSON.stringify(err));
             return res.status(404).json({
                 message: 'error finding active push config',
                 error: err
