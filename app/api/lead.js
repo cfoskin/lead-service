@@ -1,6 +1,6 @@
 'use strict';
 
-const Lead = require('../models/Lead');
+const Lead = require('../model/Lead');
 const PushSender = require('../utility/pushSender');
 const winston = require('winston');
 const mdk_express = require('datawire_mdk_express');

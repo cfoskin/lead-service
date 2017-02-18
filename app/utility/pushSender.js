@@ -1,6 +1,6 @@
 'use strict';
 
-const PushConfig = require('../models/PushConfig');
+const PushConfig = require('../model/PushConfig');
 const agSender = require('unifiedpush-node-sender'); 
 
 const newLeadMessage = {
