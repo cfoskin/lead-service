@@ -103,6 +103,7 @@ var acceptedLeadOptions = {
 };
 
 exports.sendBroadcast = (lead) => {
+    winston.info('Received request to send push broadcase for lead:' + JSON.stringify(lead));
     PushConfig.findOne({ active: true })
         .then(activePushConfig => {
             if (activePushConfig != null) {
@@ -117,6 +118,7 @@ exports.sendBroadcast = (lead) => {
             }
         })
         .catch(err => {
+            winston.error(JSON.stringify(err));
             return res.status(404).json({
                 message: 'error finding active push config',
                 error: err

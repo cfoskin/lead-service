@@ -91,6 +91,7 @@ exports.sendLeads = (req, res) => {
 };
 
 exports.sendBroadcast = (req, res) => {
+    winston.info('Received request to send broadcast: ' + req.params.id);
     Lead.findOneAndUpdate({ id: req.params.id }, { $set: req.body }, { 'new': true })
         .then(lead => {
             if (lead != null) {
@@ -99,6 +100,7 @@ exports.sendBroadcast = (req, res) => {
             }
         })
         .catch(err => {
+            winston.error(JSON.stringify(err));
             return res.status(404).json({
                 message: 'id not found',
                 error: err
