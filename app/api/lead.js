@@ -39,7 +39,6 @@ exports.getOne = (req, res) => {
             }
         })
         .catch(err => {
-            winston.error('id not found' + req.params.id);
             winston.error(JSON.stringify(err));
             return res.status(404).json({
                 message: 'id not found',
@@ -52,6 +51,7 @@ exports.getAll = (req, res) => {
     winston.info('received request to get all leads');
     Lead.find({}).exec()
         .then(leads => {
+            winston.info('retrieved leads' + JSON.stringify(leads));
             return res.status(200).json(leads);
         })
 };
