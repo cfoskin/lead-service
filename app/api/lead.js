@@ -73,6 +73,7 @@ exports.delete = (req, res) => {
 };
 
 exports.sendLeads = (req, res) => {
+    winston.info('Received request to send lead: ' + req.params.id);
     Lead.findOne({ id: req.params.id })
         .then(lead => {
             if (lead != null) {
@@ -81,6 +82,7 @@ exports.sendLeads = (req, res) => {
             }
         })
         .catch(err => {
+            winston.error(JSON.stringify(err));
             return res.status(404).json({
                 message: 'lead not found',
                 error: err
