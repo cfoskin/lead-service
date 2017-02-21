@@ -52,14 +52,11 @@ var sendPush = (pushMessage, pushOptions, settings) => {
         })
         .catch(err => {
             winston.error(JSON.stringify(err));
-            return res.status(500).json({
-                message: 'failed to send push',
-                error: err
-            });
+            return err;
         });
 };
 
-exports.sendLeads = (aliases, lead) => {
+exports.sendLeads = (aliases, lead, res) => {
     winston.info('Received request to send lead to aliases' + JSON.stringify(aliases));
     PushConfig.findOne({ active: true })
         .then(activePushConfig => {
@@ -102,8 +99,8 @@ var acceptedLeadOptions = {
     }
 };
 
-exports.sendBroadcast = (lead) => {
-    winston.info('Received request to send push broadcase for lead:' + JSON.stringify(lead));
+exports.sendBroadcast = (lead, res) => {
+    winston.info('Received request to send push broadcast for lead:' + JSON.stringify(lead));
     PushConfig.findOne({ active: true })
         .then(activePushConfig => {
             if (activePushConfig != null) {
