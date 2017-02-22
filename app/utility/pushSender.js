@@ -1,17 +1,8 @@
 'use strict';
-
 const PushConfig = require('../model/PushConfig');
 const agSender = require('unifiedpush-node-sender'); 
 const winston = require('winston');
-const mdk_express = require('datawire_mdk_express');
-const mdk_winston = require('datawire_mdk_winston');
-// Route Winston logging to the MDK:
-const options = {
-    mdk: mdk_express.mdk,
-    name: 'lead-service/pushSender'
-}
-winston.add(mdk_winston.MDKTransport, options);
-
+require('winston-loggly-bulk');
 
 const newLeadMessage = {
     alert: 'A new lead has been created',
@@ -52,14 +43,11 @@ var sendPush = (pushMessage, pushOptions, settings) => {
         })
         .catch(err => {
             winston.error(JSON.stringify(err));
-            return res.status(500).json({
-                message: 'failed to send push',
-                error: err
-            });
+            return err;
         });
 };
 
-exports.sendLeads = (aliases, lead) => {
+exports.sendLeads = (aliases, lead, res) => {
     winston.info('Received request to send lead to aliases' + JSON.stringify(aliases));
     PushConfig.findOne({ active: true })
         .then(activePushConfig => {
@@ -102,8 +90,8 @@ var acceptedLeadOptions = {
     }
 };
 
-exports.sendBroadcast = (lead) => {
-    winston.info('Received request to send push broadcase for lead:' + JSON.stringify(lead));
+exports.sendBroadcast = (lead, res) => {
+    winston.info('Received request to send push broadcast for lead:' + JSON.stringify(lead));
     PushConfig.findOne({ active: true })
         .then(activePushConfig => {
             if (activePushConfig != null) {

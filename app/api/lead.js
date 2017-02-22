@@ -1,20 +1,19 @@
 'use strict';
-
 const Lead = require('../model/Lead');
 const PushSender = require('../utility/pushSender');
 const winston = require('winston');
-const mdk_express = require('datawire_mdk_express');
-const mdk_winston = require('datawire_mdk_winston');
-// Route Winston logging to the MDK:
-const options = {
-    mdk: mdk_express.mdk,
-    name: 'lead-service'
-}
-winston.add(mdk_winston.MDKTransport, options);
+require('winston-loggly-bulk');
+
+winston.add(winston.transports.Loggly, {
+    token: process.env.LOGGLY_TOKEN,
+    subdomain: "columfoskin",
+    tags: ["lead-service"],
+    json: true
+});
 
 exports.create = (req, res) => {
     const lead = new Lead(req.body);
-    winston.info('Received request to create new lead: ' + lead);
+    winston.info('Received request to create new lead: ' + lead + ' - requestId: ' + req.requestId);
     lead.id = Math.floor((Math.random() * 4732981560546796792) + 1);
     lead.save()
         .then(newLead => {
@@ -31,7 +30,7 @@ exports.create = (req, res) => {
 };
 
 exports.getOne = (req, res) => {
-    winston.info('Received request to get lead' + req.params.id);
+    winston.info('Received request to get lead' + req.params.id + ' - requestId: ' + req.requestId);
     Lead.findOne({ id: req.params.id })
         .then(lead => {
             if (lead != null) {
@@ -48,7 +47,7 @@ exports.getOne = (req, res) => {
 };
 
 exports.getAll = (req, res) => {
-    winston.info('received request to get all leads');
+    winston.info('received request to get all leads - requestId: ' + req.requestId);
     Lead.find({}).exec()
         .then(leads => {
             winston.info('retrieved leads' + JSON.stringify(leads));
@@ -57,7 +56,7 @@ exports.getAll = (req, res) => {
 };
 
 exports.delete = (req, res) => {
-    winston.info('Received request to delete lead: ' + req.params.id);
+    winston.info('Received request to delete lead: ' + req.params.id + ' - requestId: ' + req.requestId);
     Lead.remove({ id: req.params.id })
         .then(lead => {
             winston.info('deleted lead: ' + JSON.stringify(lead));
@@ -73,7 +72,7 @@ exports.delete = (req, res) => {
 };
 
 exports.sendLeads = (req, res) => {
-    winston.info('Received request to send lead: ' + req.params.id);
+    winston.info('Received request to send lead: ' + req.params.id + ' - requestId: ' + req.requestId);
     Lead.findOne({ id: req.params.id })
         .then(lead => {
             if (lead != null) {
@@ -91,7 +90,7 @@ exports.sendLeads = (req, res) => {
 };
 
 exports.sendBroadcast = (req, res) => {
-    winston.info('Received request to send broadcast: ' + req.params.id);
+    winston.info('Received request to send broadcast: ' + req.params.id + '- requestId: ' + req.requestId);
     Lead.findOneAndUpdate({ id: req.params.id }, { $set: req.body }, { 'new': true })
         .then(lead => {
             if (lead != null) {
