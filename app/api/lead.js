@@ -11,6 +11,10 @@ winston.add(winston.transports.Loggly, {
     json: true
 });
 
+if(process.env.NODE_ENV === 'test'){
+    winston.remove(winston.transports.Console);
+}
+
 exports.create = (req, res) => {
     const lead = new Lead(req.body);
     winston.info('Received request to create new lead: ' + lead + ' - requestId: ' + req.requestId);
