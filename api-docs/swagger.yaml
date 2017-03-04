@@ -1,0 +1,265 @@
+swagger: '2.0'
+info:
+  title: Aerodoc Node Lead Service API
+  description: Backend Lead service for the Aerodoc application. - The id (not _id) field is used for all HTTP requests.
+  version: 1.0.0
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+basePath: /aerodoc/rest
+paths:
+  /leads:
+    get:
+      summary: List all leads.
+      description: |
+        Return the list of leads for the app.
+      operationId: listLeads
+      tags:
+        - Leads
+      responses:
+        '200':
+          description: Leads listed successfully
+          schema:
+            $ref: '#/definitions/LeadsListResponse'
+        '404':
+          description: No leads found
+          schema:
+            $ref: '#/definitions/NotFoundResponse'
+        '500':
+          description: Application error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    post:
+      summary: Create a lead
+      description: |
+        The leads endpoint creates a new lead.
+      operationId: createLead
+      parameters:
+        - in: body
+          name: leadInfo
+          description: The name of the lead
+          required: true
+          schema:
+            $ref: '#/definitions/Lead'
+      tags:
+        - Leads
+      responses:
+        '201':
+          description: Lead successfully created
+          schema:
+            $ref: '#/definitions/CreationSuccessResponse'
+        '400':
+          description: Missing param
+          schema:
+            $ref: '#/definitions/BadRequestResponse'
+        '500':
+          description: Application error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /leads/{id}:
+    get:
+      summary: Get one lead.
+      description: |
+        Return the a single lead - use id (not _id)
+      operationId: getLead
+      parameters:
+        - $ref: "#/parameters/id"
+      tags:
+        - Leads
+      responses:
+        '200':
+          description: Lead returned successfully
+          schema:
+            $ref: '#/definitions/GetSuccessResponse'
+        '404':
+          description: No leads found
+          schema:
+            $ref: '#/definitions/NotFoundResponse'
+        '500':
+          description: Application error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    put:
+      summary: Update a lead
+      description: |
+        The leads endpoint updates an existing lead - use id (not _id).
+      operationId: updateLead
+      parameters:
+        - $ref: "#/parameters/id"
+        - in: body
+          name: leadInfo
+          description: The lead parameters
+          required: true
+          schema:
+            $ref: '#/definitions/CreateLeadParams'
+      tags:
+        - Leads
+      responses:
+        '200':
+          description: Successfuly updated lead
+          schema:
+            $ref: '#/definitions/UpdateSuccessResponse'
+        '400':
+          description: Bad param
+          schema:
+            $ref: '#/definitions/BadRequestResponse'
+        '500':
+          description: Application error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    delete:
+      summary: Delete a lead
+      description: |
+        The leads endpoint deletes an existing lead - - use id (not _id)
+      operationId: deleteLead
+      parameters:
+        - $ref: "#/parameters/id"
+      tags:
+        - Leads
+      responses:
+        '200':
+          description: Successfuly deleted lead
+          schema:
+            $ref: '#/definitions/DeleteSuccessResponse'
+        '404':
+          description: Id not found 
+          schema:
+            $ref: '#/definitions/NotFoundResponse'
+        '500':
+          description: Application error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /leads/sendleads/:id:
+    post:
+      summary: Send a lead to a sales agent via a push notification
+      description: |
+        The sendleads endpoint sends a new lead to one or more sales agents - use id (not _id)
+      operationId: sendNewLeadPush
+      parameters:
+        - $ref: "#/parameters/leadId"
+        - in: body
+          name: pushInfo
+          description: The push message info
+          required: true
+          schema:
+            $ref: '#/definitions/NewLeadPushMessageArray'
+      tags:
+        - Leads
+      responses:
+        '202':
+          description: Push message sent
+          schema:
+            $ref: '#/definitions/PushSuccessResponse'
+        '400':
+          description: Missing param
+          schema:
+            $ref: '#/definitions/BadRequestResponse'
+        '500':
+          description: Application error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+parameters:
+  id:
+    name: id
+    in: path
+    description: the id of the object
+    type: string
+    required: true
+  leadId:
+    name: leadId
+    in: path
+    description: the id of the lead to send  - currently not working through swagger
+    type: number
+    required: true
+definitions:
+  GeneralMessage:
+    type: object
+    properties:
+      message:
+        type: string
+  CreationSuccessResponse:
+    $ref: '#/definitions/GeneralMessage'
+  UpdateSuccessResponse:
+    $ref: '#/definitions/GeneralMessage'
+  DeleteSuccessResponse:
+    $ref: '#/definitions/GeneralMessage'
+  BadRequestResponse:
+    $ref: '#/definitions/GeneralMessage'
+  ErrorResponse:
+    $ref: '#/definitions/GeneralMessage'
+  NotFoundResponse:
+    $ref: '#/definitions/GeneralMessage'
+  GetSuccessResponse:
+    $ref: '#/definitions/GeneralMessage'
+  PushSuccessResponse:
+    $ref: '#/definitions/GeneralMessage'
+  CollectionInfo:
+    type: object
+    properties:
+      ns:
+        type: string
+        description: the namespace of the collection
+      name:
+        type: string
+        description: the name of the collection
+      count:
+        type: integer
+        description: the number of documents in the collection
+      size:
+        type: integer
+        description: the size of the collection in bytes
+  LeadsListResponse:
+    type: array
+    items:
+      $ref: '#/definitions/Lead'
+  Lead:
+    type: object
+    properties:
+      name:
+        type: string
+      location:
+        type: string
+      phoneNumber:
+        type: string
+      salesAgent:
+        type: string
+    required:
+      - name
+      - location
+      - phoneNumber
+  NewLeadPushMessage:
+    type: object
+    properties:
+      _id:
+        type: string
+      id:
+        type: string
+      loginName:
+        type: string
+      password:
+        type: string
+      location:
+        type: string
+      status:
+        type: string
+      longitude:
+        type: string
+      latitude:
+        type: string
+    required:
+      - _id
+      - id
+      - loginName
+      - password
+      - location
+      - status
+      - longitude
+      - latitude
+  NewLeadPushMessageArray:
+    type: array
+    items:
+      $ref: 'NewLeadPushMessage'
+
