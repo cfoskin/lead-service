@@ -1,0 +1,40 @@
+version: '2'
+services:
+
+  mongo:
+    image: mongo
+    container_name: mongo
+    ports:
+      - "27017:27017"
+
+  nginx_proxy_local:
+    image: cfoskin/nginx-proxy-local-dev
+    container_name: nginx-proxy-local-dev
+    ports:
+      - "3000:8080"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+
+  lead_service:
+    image: cfoskin/lead-service
+    container_name: lead-service
+    depends_on:
+      - "mongo"
+    environment:
+      - LOGGLY_TOKEN=$LOGGLY_TOKEN
+
+  sales_agent_service:
+    image: cfoskin/sales-agent-service
+    container_name: sales-agent-service
+    depends_on:
+      - "mongo"
+    environment:
+      - LOGGLY_TOKEN=$LOGGLY_TOKEN
+
+  push_configuraton_service:
+    image: cfoskin/push-configuraton-service
+    container_name: push-configuraton-service
+    depends_on:
+      - "mongo"
+    environment:
+      - LOGGLY_TOKEN=$LOGGLY_TOKEN
