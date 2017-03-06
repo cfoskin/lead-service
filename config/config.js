@@ -2,5 +2,5 @@
 
 module.exports = {
     'database': 'mongodb://mongo:27017/aerodoc',
-    'test': 'mongodb://mongo:/test',
+    'test': 'mongodb://localhost:/test',
 };
