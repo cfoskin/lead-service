@@ -23,6 +23,10 @@ Start the server
 
     npm start
    
+##Logging
+
+Logging is provided by Winston and uses a Loggly transport to aggregate the logs - A free Loggly account must be created prior to running any of the Aerodoc services. The LOGGLY_TOKEN environment varible must be set for each Aerodoc service to work.
+
 ##Running Tests
 
     npm test
