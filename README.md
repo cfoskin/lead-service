@@ -2,6 +2,12 @@
 
 This is the backend lead service for the Aerodoc Node.js Microservices project. 
 
+##API Docs 
+
+The API documentation is implemented using Swagger UI and can be found at:
+
+        "serverurl/aerodoc/lead-service/docs"
+
 ##Running 
 
 
