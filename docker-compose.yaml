@@ -8,8 +8,8 @@ services:
       - "27017:27017"
 
   nginx_proxy_local:
-    image: cfoskin/nginx-proxy-local-dev
-    container_name: nginx-proxy-local-dev
+    image: cfoskin/nginx-proxy-local
+    container_name: nginx-proxy-local
     ports:
       - "3000:8080"
     volumes:
