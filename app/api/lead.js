@@ -52,7 +52,7 @@ exports.getOne = (req, res) => {
 
 exports.getAll = (req, res) => {
     winston.info('received request to get all leads - requestId: ' + req.requestId);
-    Lead.find({}).exec()
+    Lead.find({saleAgent: null}).exec()
         .then(leads => {
             winston.info('retrieved leads' + JSON.stringify(leads));
             return res.status(200).json(leads);
