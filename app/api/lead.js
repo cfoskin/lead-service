@@ -76,37 +76,52 @@ exports.delete = (req, res) => {
 };
 
 exports.sendLeads = (req, res) => {
-    winston.info('Received request to send lead: ' + req.params.id + ' - requestId: ' + req.requestId);
     Lead.findOne({ id: req.params.id })
         .then(lead => {
             if (lead != null) {
                 const aliases = req.body;
-                PushSender.sendLeads(aliases, lead);
+                let newAliases = [];
+                let newAlias = {};
+                aliases.forEach((alias) => {
+                    newAlias.id = alias.id;
+                    newAlias.loginName = alias.loginName;
+                    newAlias.password =  alias.password;
+                    newAlias.location = alias.location;
+                    newAlias.status = alias.status;
+                    newAlias.latitude = alias.latitude;
+                    newAlias.longitude = alias.longitude;
+                    newAliases.push(newAlias);
+                });
+
+               return {
+                lead: lead,
+                newAliases: newAliases
+            };
             }
+        }).then( data => {
+            return PushSender.sendLeads(data.newAliases, data.lead);
+        }).then( () => {
+                return res.status(200).json('leads sent');
         })
         .catch(err => {
-            winston.error(JSON.stringify(err));
             return res.status(404).json({
-                message: 'lead not found',
-                error: err
+                error: err.message
             });
         })
 };
-
 exports.sendBroadcast = (req, res) => {
-    winston.info('Received request to send broadcast: ' + req.params.id + '- requestId: ' + req.requestId);
     Lead.findOneAndUpdate({ id: req.params.id }, { $set: req.body }, { 'new': true })
         .then(lead => {
             if (lead != null) {
-                PushSender.sendBroadcast(lead);
-                return res.status(200).json(lead);
+               return PushSender.sendBroadcast(lead);
             }
+        }).then( () => {
+            console.log('success');
+                return res.status(204).json('success');
         })
         .catch(err => {
-            winston.error(JSON.stringify(err));
-            return res.status(404).json({
-                message: 'id not found',
-                error: err
+           return res.status(404).json({
+                error: err.message
             });
         })
 };
