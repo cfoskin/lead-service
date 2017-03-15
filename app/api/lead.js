@@ -11,7 +11,7 @@ winston.add(winston.transports.Loggly, {
     json: true
 });
 
-if(process.env.NODE_ENV === 'test'){
+if (process.env.NODE_ENV === 'test') {
     winston.remove(winston.transports.Console);
 }
 
@@ -52,7 +52,7 @@ exports.getOne = (req, res) => {
 
 exports.getAll = (req, res) => {
     winston.info('received request to get all leads - requestId: ' + req.requestId);
-    Lead.find({saleAgent: null}).exec()
+    Lead.find({ saleAgent: null }).exec()
         .then(leads => {
             winston.info('retrieved leads' + JSON.stringify(leads));
             return res.status(200).json(leads);
@@ -85,7 +85,7 @@ exports.sendLeads = (req, res) => {
                 aliases.forEach((alias) => {
                     newAlias.id = alias.id;
                     newAlias.loginName = alias.loginName;
-                    newAlias.password =  alias.password;
+                    newAlias.password = alias.password;
                     newAlias.location = alias.location;
                     newAlias.status = alias.status;
                     newAlias.latitude = alias.latitude;
@@ -93,15 +93,15 @@ exports.sendLeads = (req, res) => {
                     newAliases.push(newAlias);
                 });
 
-               return {
-                lead: lead,
-                newAliases: newAliases
-            };
+                return {
+                    lead: lead,
+                    newAliases: newAliases
+                };
             }
-        }).then( data => {
+        }).then(data => {
             return PushSender.sendLeads(data.newAliases, data.lead);
-        }).then( () => {
-                return res.status(200).json('leads sent');
+        }).then(() => {
+            return res.status(200).json('leads sent');
         })
         .catch(err => {
             return res.status(404).json({
@@ -113,14 +113,13 @@ exports.sendBroadcast = (req, res) => {
     Lead.findOneAndUpdate({ id: req.params.id }, { $set: req.body }, { 'new': true })
         .then(lead => {
             if (lead != null) {
-               return PushSender.sendBroadcast(lead);
+                return PushSender.sendBroadcast(lead);
             }
-        }).then( () => {
-            console.log('success');
-                return res.status(204).json('success');
+        }).then(() => {
+            return res.status(204).json('success');
         })
         .catch(err => {
-           return res.status(404).json({
+            return res.status(404).json({
                 error: err.message
             });
         })
