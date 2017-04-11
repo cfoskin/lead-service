@@ -2,13 +2,13 @@
 
 This is the backend lead service for the Aerodoc Node.js Microservices project. 
 
-##API Docs 
+## API Docs 
 
 The API documentation is implemented using Swagger UI and can be found at:
 
         "serverurl/aerodoc/lead-service/docs"
 
-##Running 
+## Running 
 
 
 Docker Compose:
@@ -29,14 +29,14 @@ Start the server
 
     npm start
    
-##Logging
+## Logging
 
 Logging is provided by Winston and uses a Loggly transport to aggregate the logs - A free Loggly account must be created prior to running any of the Aerodoc services. The LOGGLY_TOKEN environment varible must be set for each Aerodoc service to work.
 
-##Running Tests
+## Running Tests
 
     npm test
     
-##Running Coverage
+## Running Coverage
 
     npm run coverage
