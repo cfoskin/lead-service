@@ -76,6 +76,7 @@ exports.delete = (req, res) => {
 };
 
 exports.sendLeads = (req, res) => {
+    winston.info('Received request to send lead: ' + req.params.id + ' - requestId: ' + req.requestId);
     Lead.findOne({ id: req.params.id })
         .then(lead => {
             if (lead != null) {
@@ -99,27 +100,36 @@ exports.sendLeads = (req, res) => {
                 };
             }
         }).then(data => {
+            winston.info('sending lead ' + data.lead + ' to aliases: ' + data.newAliases);
             return PushSender.sendLeads(data.newAliases, data.lead);
         }).then(() => {
+            winston.info('Lead sent successfully');
             return res.status(200).json('leads sent');
         })
         .catch(err => {
+            winston.error(JSON.stringify(err));
             return res.status(404).json({
                 error: err.message
             });
         })
 };
+
 exports.sendBroadcast = (req, res) => {
+    winston.info('request body:' + req.body);
+    winston.info('Received request to send broadcast for lead: ' + req.params.id + ' - requestId: ' + req.requestId);
     Lead.findOneAndUpdate({ id: req.params.id }, { $set: req.body }, { 'new': true })
         .then(lead => {
             if (lead != null) {
+                winston.info('sending broadcast for lead: ' + lead);
                 return PushSender.sendBroadcast(lead);
             }
         }).then(() => {
+            winston.info('broadcast sent successfully');
             return res.status(204).json('success');
         })
         .catch(err => {
-            return res.status(404).json({
+            winston.error(JSON.stringify(err));
+            return res.status(500).json({
                 error: err.message
             });
         })
