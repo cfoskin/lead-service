@@ -85,27 +85,17 @@ paths:
     put:
       summary: Update a lead
       description: |
-        The leads endpoint updates an existing lead - use id (not _id).
+        The leads endpoint updates an existing lead when it is accepted by a sales agent & sends a broadcast push to all sales agents - use id (not _id).
       operationId: updateLead
       parameters:
         - $ref: "#/parameters/id"
-        - in: body
-          name: leadInfo
-          description: The lead parameters
-          required: true
-          schema:
-            $ref: '#/definitions/CreateLeadParams'
       tags:
         - Leads
       responses:
-        '200':
+        '204':
           description: Successfuly updated lead
           schema:
             $ref: '#/definitions/UpdateSuccessResponse'
-        '400':
-          description: Bad param
-          schema:
-            $ref: '#/definitions/BadRequestResponse'
         '500':
           description: Application error
           schema:
@@ -132,17 +122,17 @@ paths:
           description: Application error
           schema:
             $ref: '#/definitions/ErrorResponse'
-  /leads/sendleads/:id:
+  /leads/sendleads/{id}:
     post:
       summary: Send a lead to a sales agent via a push notification
       description: |
         The sendleads endpoint sends a new lead to one or more sales agents - use id (not _id)
       operationId: sendNewLeadPush
       parameters:
-        - $ref: "#/parameters/leadId"
+        - $ref: "#/parameters/id"
         - in: body
           name: pushInfo
-          description: The push message info
+          description: The push message aliases
           required: true
           schema:
             $ref: '#/definitions/NewLeadPushMessageArray'
@@ -172,7 +162,7 @@ parameters:
     name: leadId
     in: path
     description: the id of the lead to send  - currently not working through swagger
-    type: number
+    type: integer
     required: true
 definitions:
   GeneralMessage:
@@ -224,7 +214,7 @@ definitions:
         type: string
       phoneNumber:
         type: string
-      salesAgent:
+      saleAgent:
         type: string
     required:
       - name
