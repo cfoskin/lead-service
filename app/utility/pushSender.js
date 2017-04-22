@@ -2,6 +2,8 @@
 
 const PushConfig = require('../model/PushConfig');
 const agSender = require('unifiedpush-node-sender');
+const winston = require('winston');
+require('winston-loggly-bulk');
 
 var getLeadMessage = (lead) => {
     return {
@@ -33,7 +35,9 @@ var settings = {
     masterSecret: ''
 };
 
-var sendPush = (pushMessage, pushOptions, settings) => {
+var sendPush = (pushMessage, pushOptions, settings, requestId) => {
+    winston.info('sendPush function: request recieved to send push - ' + requestId);
+    winston.info('sendPush function: Sending push message: - ' + JSON.stringify(pushMessage));
     return agSender(settings)
         .then((client) => {
             return client.sender.send(pushMessage, pushOptions);
@@ -42,15 +46,17 @@ var sendPush = (pushMessage, pushOptions, settings) => {
         })
 };
 
-exports.sendLeads = (aliases, lead) => {
+exports.sendLeads = (aliases, lead, requestId) => {
+    winston.info('sendLeads function: request recieved to send lead - ' + requestId);
     return PushConfig.findOne({ active: true })
         .then(activePushConfig => {
+            winston.info('sendLeads function: retrieving activePushConfig - ' + requestId);
             if (activePushConfig != null) {
                 settings.url = activePushConfig.serverURL;
                 settings.applicationId = activePushConfig.pushApplicationId;
                 settings.masterSecret = activePushConfig.masterSecret;
                 newLeadOptions.criteria.alias = aliases;
-                return sendPush(getLeadMessage(lead), newLeadOptions, settings);
+                return sendPush(getLeadMessage(lead), newLeadOptions, settings, requestId);
             }
         })
 };
@@ -75,14 +81,16 @@ var acceptedLeadOptions = {
     }
 };
 
-exports.sendBroadcast = (lead) => {
+exports.sendBroadcast = (lead, requestId) => {
+ winston.info('sendBroadcast function: request recieved to send broadcast- ' + requestId);
   return PushConfig.findOne({ active: true })
         .then(activePushConfig => {
+            winston.info('sendBroadcast function: retrieving activePushConfig - ' + requestId);
             if (activePushConfig != null) {
                 settings.url = activePushConfig.serverURL;
                 settings.applicationId = activePushConfig.pushApplicationId;
                 settings.masterSecret = activePushConfig.masterSecret;
-                return sendPush(getAcceptedLeadMessage(lead), acceptedLeadOptions, settings);
+                return sendPush(getAcceptedLeadMessage(lead), acceptedLeadOptions, settings, requestId);
             }
         })
 };
