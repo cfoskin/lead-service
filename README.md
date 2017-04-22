@@ -2,6 +2,20 @@
 
 This is the backend lead service for the Aerodoc Node.js Microservices project. 
 
+Other services: 
+
+(https://github.com/cfoskin/push-configuration-service)
+
+(https://github.com/cfoskin/sales-agent-service)
+
+(https://github.com/cfoskin/aerodoc-client)
+
+API Gateway on Dockerhub:
+
+(https://hub.docker.com/r/cfoskin/nginx-proxy-local/)
+
+
+
 ## API Docs 
 
 The API documentation is implemented using Swagger UI and can be found at:
