@@ -1,6 +1,6 @@
 version: '2'
 services:
-
+    
   mongo:
     image: mongo
     container_name: mongo
@@ -36,3 +36,10 @@ services:
       - "mongo"
     environment:
       - LOGGLY_TOKEN=$LOGGLY_TOKEN
+
+  aerodoc_client:
+    image: cfoskin/aerodoc-client
+    container_name: aerodoc-client 
+    ports:
+      - "8080:8080"
+
