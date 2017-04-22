@@ -101,7 +101,7 @@ exports.sendLeads = (req, res) => {
             }
         }).then(data => {
             winston.info('sending lead ' + data.lead + ' to aliases: ' + data.newAliases);
-            return PushSender.sendLeads(data.newAliases, data.lead);
+            return PushSender.sendLeads(data.newAliases, data.lead, req.requestId);
         }).then(() => {
             winston.info('Lead sent successfully');
             return res.status(200).json('leads sent');
@@ -121,7 +121,7 @@ exports.sendBroadcast = (req, res) => {
         .then(lead => {
             if (lead != null) {
                 winston.info('sending broadcast for lead: ' + lead);
-                return PushSender.sendBroadcast(lead);
+                return PushSender.sendBroadcast(lead, req.requestId);
             }
         }).then(() => {
             winston.info('broadcast sent successfully');
