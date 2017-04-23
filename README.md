@@ -33,7 +33,9 @@ To run service with all other backend services use Docker Compose with the docke
         
 npm:
 
-To run service on its own Mongo needs to be installed and running.
+To run service on its own Mongo needs to be installed and running. 
+
+MONGO_URL environment variable must be set: eg MONGO_URL=mongodb://mongodb:27017/aerodoc
 
 Install dependencies
 
