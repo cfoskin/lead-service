@@ -4,15 +4,15 @@ This is the backend lead service for the Aerodoc Node.js Microservices project.
 
 Other services: 
 
-https://github.com/cfoskin/push-configuration-service
+Push Configuration Service: https://github.com/cfoskin/push-configuration-service
 
-https://github.com/cfoskin/sales-agent-service
+Sales Agent Service: https://github.com/cfoskin/sales-agent-service
 
-https://github.com/cfoskin/aerodoc-client
+Aerodoc Client: https://github.com/cfoskin/aerodoc-client
 
-API Gateway on Dockerhub:
 
-https://hub.docker.com/r/cfoskin/nginx-proxy-local/
+
+API Gateway on Dockerhub: https://hub.docker.com/r/cfoskin/nginx-proxy-local/
 
 
 
@@ -27,7 +27,7 @@ The API documentation is implemented using Swagger UI and can be found at:
 
 Docker Compose:
 
-To run service with all other backend services use Docker Compose with the docker-compose.yaml file.
+To run service with all other backend services use Docker Compose with the docker-compose.yaml file. Note: To seed the system with the sales agents data, run the application from the sales agent service, otherwise see swagger documentation for how to post sales agents to RESTful endpoints.
 
         docker-compose up
         
