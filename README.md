@@ -35,7 +35,7 @@ npm:
 
 To run service on its own Mongo needs to be installed and running. 
 
-MONGO_URL environment variable must be set: eg MONGO_URL=mongodb://mongodb:27017/aerodoc
+MONGO_URL environment variable must be set: eg MONGO_URL=mongodb://localhost:27017/aerodoc
 
 Install dependencies
 
